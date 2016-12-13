@@ -2,6 +2,14 @@ kind: Template
 apiVersion: v1
 objects:
 - apiVersion: v1
+  kind: ConfigMap
+  data:
+    sample-app.conf: |+
+      [sample_app]
+      message = Brant
+  metadata:
+    name: config
+- apiVersion: v1
   kind: ImageStream
   metadata:
     annotations:
@@ -87,6 +95,13 @@ objects:
           - containerPort: 8080
             protocol: TCP
           resources: {}
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/sample_app
+        volumes:
+          - name: config-volume
+            configMap:
+              name: config
     test: false
     triggers:
     - type: ConfigChange
